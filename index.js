@@ -2,7 +2,7 @@ const osc = require('osc-min')
 const udp = require('dgram')
 
 const derp = {}
-const sock = udp.createSocket("udp4", function(msg, rinfo) {
+const sock = udp.createSocket('udp4', function(msg, rinfo) {
   try {
     const data = osc.fromBuffer(msg)
     data.elements.map(element => {
@@ -10,7 +10,7 @@ const sock = udp.createSocket("udp4", function(msg, rinfo) {
     })
     return
   } catch (error) {
-    return console.log('invalid OSC packet', error);
+    return console.log('invalid OSC packet', error)
   }
 });
 
@@ -24,4 +24,4 @@ setInterval(() => {
   }
 }, 100)
 
-sock.bind(7980);
+sock.bind(7980)
