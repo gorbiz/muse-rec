@@ -1,0 +1,59 @@
+version: '2'
+
+services:
+
+  muse-rec:
+    image: node:latest
+    ports:
+      - "7980:7980/udp"
+    depends_on:
+      - influxdb
+    volumes:
+      - .:/usr/app/
+    environment:
+      - INFLUXDB_URI=http://influxdb:8086/muse
+    working_dir: /usr/app/
+    command: node /usr/app/index.js
+    restart: unless-stopped
+
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - "8086:8086"
+      # - "8083:8083"
+      # - "8090:8090"
+    environment:
+      - INFLUXDB_DB=muse
+      # - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
+      # - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+      - INFLUXDB_REPORTING_DISABLED=true
+    volumes:
+      - ./.data/influxdb:/var/lib/influxdb
+
+  chronograf:
+    image: chronograf:latest
+    ports:
+      - '127.0.0.1:8888:8888'
+    volumes:
+      - ./.data/chronograf-storage:/var/lib/chronograf
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      # - INFLUXDB_USERNAME=${INFLUXDB_USERNAME}
+      # - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    user: "0"
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - ./.data/grafana:/var/lib/grafana
+      - ./.data/grafana-provisioning/:/etc/grafana/provisioning
+      - ./grafana.ini:/etc/grafana/grafana.ini

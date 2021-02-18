@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+
+  muse-rec:
+    # XXX could not get this working :P
+    # environment:
+    #  - PM2_HOME=/tmp/.pm2
+    # command: npx pm2-dev /usr/app/index.js
+    # command: node /usr/app/cpu-load-test.js
