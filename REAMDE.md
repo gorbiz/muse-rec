@@ -1,9 +1,17 @@
+Record EEG data (OSC stream) from Muse (through the Mind Monitor Android app).
 
 # Up and running
 ```sh
-echo GRAFANA_USERNAME=username-here > .env
-echo GRAFANA_PASSWORD=password-here >> .env
-
-sudo mkdir -p .data/influxdb .data/grafana .data/grafana-provisioning/ .data/chronograf-storage
+# sudo mkdir -p .data/influxdb .data/chronograf-storage # is this really needed?
 docker-compose up -d
 ```
+
+## Without storing data
+
+```sh
+nodemon index.js
+```
+
+# Configure Mind Monitor
+...to communicate with this backend.
+
